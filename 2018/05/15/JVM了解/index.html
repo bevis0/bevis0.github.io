@@ -248,13 +248,12 @@ function activateLightMode(){
 <h3 id="可达性分析（GC-Root）"><a href="#可达性分析（GC-Root）" class="headerlink" title="可达性分析（GC Root）"></a>可达性分析（GC Root）</h3><p>通过一系列名为“GC Roots”的对象作为起始点，从这个节点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain）,当一个对象到GC Roots没有任何引用链相连（用图论术语描述就是从GC Roots到这个对象不可达）时，则证明此对象是不可用的。在主流的商用程序语言中（Java、C#）,都是使用根搜索算法判定对象是否存活的。</p>
 <p>可作为GC Roots的对象包括下面几种：</p>
 <ol>
-<li><p>虚拟机栈（栈帧中的本地变量表）中的引用的对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">比较好理解为方法中所引用的对象，这些对象在堆中分配了地址空间，在虚拟机栈执行过程中，引用这些对象的地址引用，当完成方法的执行，当运行结束并且该对象生命周期结束，不再需要这些对象时，可以释放。这些对象通常在本地变量表中被记录，可以作为GC Root</span><br></pre></td></tr></table></figure>
+<li><p>虚拟机栈（栈帧中的本地变量表）中的引用的对象。<br><code>比较好理解为方法中所引用的对象，这些对象在堆中分配了地址空间，在虚拟机栈执行过程中，引用这些对象的地址引用，当完成方法的执行，当运行结束并且该对象生命周期结束，不再需要这些对象时，可以释放。这些对象通常在本地变量表中被记录，可以作为GC Root</code></p>
 </li>
-<li><p>方法区中的类静态属性引用的对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">对于类中存在 static 的静态属性对象，该引用是存储在方法区中，生命周期可以在整个运行周期中，只能单独作为GC Root。</span><br></pre></td></tr></table></figure></li>
-<li><p>方法区中的常量引用的对象。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static final 所修饰的对象，这些对象也是被分配在方法区，生命周期可以在整个运行周期，可以作为GC Root</span><br></pre></td></tr></table></figure></li>
+<li><p>方法区中的类静态属性引用的对象。<br><code>对于类中存在 static 的静态属性对象，该引用是存储在方法区中，生命周期可以在整个运行周期中，只能单独作为GC Root。</code></p>
+</li>
+<li><p>方法区中的常量引用的对象。<br><code>static final 所修饰的对象，这些对象也是被分配在方法区，生命周期可以在整个运行周期，可以作为GC Root</code></p>
+</li>
 <li><p>本地方法栈中JNI（Native方法）的引用的对象。</p>
 </li>
 </ol>
