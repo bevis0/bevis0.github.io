@@ -1,0 +1,321 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>BuildVariants认识 | Bevis研究院</title><meta name="description" content="BuildVariants认识"><meta name="keywords" content="Gradle"><meta name="author" content="Bevis"><meta name="copyright" content="Bevis"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="BuildVariants认识"><meta name="twitter:description" content="BuildVariants认识"><meta name="twitter:image" content="http://yoursite.com/img/post.jpg"><meta property="og:type" content="article"><meta property="og:title" content="BuildVariants认识"><meta property="og:url" content="http://yoursite.com/2018/06/16/BuildVariants%E8%AE%A4%E8%AF%86/"><meta property="og:site_name" content="Bevis研究院"><meta property="og:description" content="BuildVariants认识"><meta property="og:image" content="http://yoursite.com/img/post.jpg"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
+var t = Cookies.get("theme")
+if (autoChangeMode == '1'){
+  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined){
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport){
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour < 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+  }
+  } else if (t == 'light') activateLightMode()
+  else activateDarkMode()
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://yoursite.com/2018/06/16/BuildVariants%E8%AE%A4%E8%AF%86/"><link rel="prev" title="OkHttp" href="http://yoursite.com/2019/05/01/OkHttp/"><link rel="next" title="Gradle配置Kotlin环境" href="http://yoursite.com/2018/05/24/Gradle%E9%85%8D%E7%BD%AEKotlin%E7%8E%AF%E5%A2%83/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  highlightShrink: 'false',
+  isFontAwesomeV5: false,
+  isPhotoFigcaption: false
+  
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isSidebar: true  
+  }</script><noscript><style>
+#page-header {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Bevis研究院" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">9</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">7</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">4</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基础"><span class="toc-number">1.</span> <span class="toc-text">基础</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#buildTypes"><span class="toc-number">2.</span> <span class="toc-text">buildTypes</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#buildTypes-DSL"><span class="toc-number">2.1.</span> <span class="toc-text">buildTypes DSL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#productFlavors"><span class="toc-number">3.</span> <span class="toc-text">productFlavors</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#productFlavor-DSL"><span class="toc-number">3.1.</span> <span class="toc-text">productFlavor DSL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过滤变体"><span class="toc-number">4.</span> <span class="toc-text">过滤变体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变体源"><span class="toc-number">5.</span> <span class="toc-text">变体源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#注意点"><span class="toc-number">5.1.</span> <span class="toc-text">注意点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#变体依赖"><span class="toc-number">6.</span> <span class="toc-text">变体依赖</span></a></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/post.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Bevis研究院</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">BuildVariants认识</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date" title="发表于 2018-06-16 20:45:22"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2018-06-16</time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Gradle/">Gradle</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><h2 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h2><p>构建变体(Build Variants)有两部分内容构成 :</p>
+<p><code>buildTypes</code>（构建类型） + <code>productFlavors</code>（产品风味）</p>
+<p>通过 <code>android { }</code> 配置变量进行部署：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    ...</span><br><span class="line">    </span><br><span class="line">    defaultConfig &#123;...&#125;</span><br><span class="line">    </span><br><span class="line">    buildTypes &#123;</span><br><span class="line">        release &#123;</span><br><span class="line">            minifyEnabled false</span><br><span class="line">            proguardFiles getDefaultProguardFile(&#39;proguard-android.txt&#39;), &#39;proguard-rules.pro&#39;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    productFlavors &#123;</span><br><span class="line">        flavorDimensions &quot;api&quot;,&quot;flavor&quot;</span><br><span class="line">        flavor1 &#123;</span><br><span class="line">            dimension &quot;flavor&quot;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        flavor2 &#123;</span><br><span class="line">            dimension &quot;flavor&quot;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        api1 &#123;</span><br><span class="line">            dimension &quot;api&quot;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        api2 &#123;</span><br><span class="line">            dimension &quot;api&quot;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+<h2 id="buildTypes"><a href="#buildTypes" class="headerlink" title="buildTypes"></a>buildTypes</h2><p>在一般情况下，项目创建时，项目默认创建了两种构建类型 <code>debug</code> 和 <code>release</code>。</p>
+<p><code>debug</code>是在项目调试阶段的构建类型，而<code>release</code>则是面向发布。</p>
+<p>这两个构建类型方便开发者对两种不同环境进行不同的构建配置。</p>
+<p>比如签名信息、so支持类型、debug信息等。</p>
+<h3 id="buildTypes-DSL"><a href="#buildTypes-DSL" class="headerlink" title="buildTypes DSL"></a>buildTypes DSL</h3><table>
+<thead>
+<tr>
+<th>属性/方法</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>applicationIdSuffix</td>
+<td>为计算后的 applicationId 添加该属性指定的后缀</td>
+<td></td>
+</tr>
+<tr>
+<td>consumerProguardFiles</td>
+<td>将混淆规则文件添加到构建好的AAR中</td>
+<td></td>
+</tr>
+<tr>
+<td>crunchPngs</td>
+<td>是否压缩PNG文件</td>
+<td></td>
+</tr>
+<tr>
+<td>debuggable</td>
+<td>是否生成一个可调试的APk文件</td>
+<td></td>
+</tr>
+<tr>
+<td>embedMicroApp</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>javaCompileOptions</td>
+<td>可以添加Java编译参数</td>
+<td></td>
+</tr>
+<tr>
+<td>jniDebuggable</td>
+<td>是否生成一个可调试Native的APK文件</td>
+<td></td>
+</tr>
+<tr>
+<td>manifestPlaceholders</td>
+<td>manifest文件占位符配置</td>
+<td></td>
+</tr>
+<tr>
+<td>matchingFallbacks</td>
+<td>指定构建匹配失败时降级的构建类型</td>
+<td></td>
+</tr>
+<tr>
+<td>minifyEnabled</td>
+<td>是否移除无用的代码</td>
+<td></td>
+</tr>
+<tr>
+<td>multiDexEnabled</td>
+<td>Multi-Dex 是否支持</td>
+<td></td>
+</tr>
+<tr>
+<td>multiDexKeepFile</td>
+<td>指定在需要主Dex File 存在的内容的声名文件</td>
+<td></td>
+</tr>
+<tr>
+<td>multiDexKeepProguard</td>
+<td>指定一个文件，用于在编译时对主Dex classes 的额外混淆规则</td>
+<td></td>
+</tr>
+<tr>
+<td>name</td>
+<td>当前构建类型的名字</td>
+<td></td>
+</tr>
+<tr>
+<td>postprocessing</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>proguardFiles</td>
+<td>指定混淆规则文件</td>
+<td></td>
+</tr>
+<tr>
+<td>pseudoLocalesEnabled</td>
+<td>是否生成仿冒资源，通过 resValue 生成</td>
+<td></td>
+</tr>
+<tr>
+<td>renderscriptDebuggable</td>
+<td>生成一个用于调试 RenderScript 代码的apk</td>
+<td></td>
+</tr>
+<tr>
+<td>renderscriptOptimLevel</td>
+<td>指定 RenderScript的编译优化等级</td>
+<td></td>
+</tr>
+<tr>
+<td>shrinkResources</td>
+<td>是否优化未使用的资源</td>
+<td></td>
+</tr>
+<tr>
+<td>signingConfig</td>
+<td>签名定义</td>
+<td></td>
+</tr>
+<tr>
+<td>testCoverageEnabled</td>
+<td>是否启动覆盖测试</td>
+<td></td>
+</tr>
+<tr>
+<td>useProguard</td>
+<td>是否总是启动代码混淆和资源优化</td>
+<td></td>
+</tr>
+<tr>
+<td>versionNameSuffix</td>
+<td>添加版本后缀</td>
+<td></td>
+</tr>
+<tr>
+<td>zipAlignEnabled</td>
+<td>是否启动zip对其</td>
+<td></td>
+</tr>
+<tr>
+<td>buildConfigField(type, name, value)</td>
+<td>添加一个字段到 BuildConfig Class文件中</td>
+<td></td>
+</tr>
+<tr>
+<td>consumerProguardFile(proguardFile)</td>
+<td>添加一个需要打包进AAR的混淆文件</td>
+<td></td>
+</tr>
+<tr>
+<td>consumerProguardFiles(proguardFiles)</td>
+<td>添加些需要打包进AAR的混淆文件</td>
+<td></td>
+</tr>
+<tr>
+<td>externalNativeBuild(action)</td>
+<td>定义native构建参数</td>
+<td></td>
+</tr>
+<tr>
+<td>initWith(that)</td>
+<td>复制指定build type的所有属性信息</td>
+<td></td>
+</tr>
+<tr>
+<td>proguardFile(proguardFile)</td>
+<td>添加一个混淆定义文件</td>
+<td></td>
+</tr>
+<tr>
+<td>proguardFiles(files)</td>
+<td>添加混淆定义文件</td>
+<td></td>
+</tr>
+<tr>
+<td>resValue(type, name, value)</td>
+<td>添加一个资源信息</td>
+<td></td>
+</tr>
+<tr>
+<td>setProguardFiles(proguardFileIterable)</td>
+<td>设置混淆定义文件</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>仅仅对<code>buildTypes</code>的配置并不能满足我们差异化构建的要求，因此插件中为我们提供了另外的构建配置 <code>productFlavors</code>。</p>
+<h2 id="productFlavors"><a href="#productFlavors" class="headerlink" title="productFlavors"></a>productFlavors</h2><p>productFlavors 和 defaultConfig 同属于 <code>ProductFlavor</code>类。两者的配置内容基本没什么差异，但是在不同变体的构造任务中，对应的变体配置将覆盖默认配置内容。</p>
+<p>productFlavors 需要通过 <code>flavorDimensions</code> 创建“模式”名，以用来对 多个flavor进行组织分组。</p>
+<p>在上面的 <code>productFlavors {...}</code> 例子中，我们声名了两组模式的<code>productFlavor</code>，<code>api</code>和<code>flavor</code>，同时每个模式下，都有两个flavor。</p>
+<p>根据构建的组合规则，Android Plugin 会根据这些分组进行组合关系。以上的例子为例。会产生以下几个 productFalvor组合构建任务：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">1. api1Flavor1Debug</span><br><span class="line">2. api1Flavor1Release</span><br><span class="line">3. api2Flavor1Debug</span><br><span class="line">4. api2Flavor1Release </span><br><span class="line">5. api1Flavor2Debug</span><br><span class="line">6. api1Flavor2Release</span><br><span class="line">7. api2Flavor2Debug</span><br><span class="line">8. api2Flavor2Release</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+<p>Gralde产生的变体数量等同于每个flavor模式的组合数量和构建类型数量的乘积。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">falvor每个分组数量 * falvor每个分组数量... * BuildType子项数量</span><br></pre></td></tr></table></figure>
+
+<p>同时产生是名字也是根据 <code>flavorDimensions</code>所声名的模式名顺序进行拼接。</p>
+<p>比如例子中在 <code>flavorDimensions &quot;api&quot;,&quot;flavor&quot;</code>声名后，产生的编译名为<code>api*+flavor*+debug/release</code>的组合关系。</p>
+<h3 id="productFlavor-DSL"><a href="#productFlavor-DSL" class="headerlink" title="productFlavor DSL"></a>productFlavor DSL</h3><h2 id="过滤变体"><a href="#过滤变体" class="headerlink" title="过滤变体"></a>过滤变体</h2><p>变体是Gradle根据配合内容进行组合增加的，往往会比我们所需求的变体要多，因此为了处理掉不不需要的变体。我们可以通过 <code>variantFilter {}</code>进行过滤。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">variantFilter &#123;</span><br><span class="line">     if(it.name.contains(&quot;flavor2&quot;))&#123;</span><br><span class="line">         it.setIgnore(true)</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+<p>这样对于变体名中包含 <code>flavor2</code> 的构建变体都将不会出现在 Build Variant 中。</p>
+<h2 id="变体源"><a href="#变体源" class="headerlink" title="变体源"></a>变体源</h2><p>变体提供了对构建源的隔离，在不同的变体下，可以配置不同的 <code>sourceSet</code>信息。</p>
+<p>默认情况下，<code>main/</code> 的构建源是默认存在的，无论通过任何变体进行构建都将纳入构建范围，因此这里在 <code>main/</code>下存储的都是哥哥变体都共享的资源，而如果需要根据变体信息进行特殊构建的内容，则需要放到对应的变体目录下。</p>
+<p>比如对于 <code>api1Flavor1Debug</code> 变体。对于以下几个源都将纳入构建范围：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. api1&#x2F;</span><br><span class="line">2. flavor1&#x2F;</span><br><span class="line">3. debug&#x2F;</span><br><span class="line">4. api1Flavor1&#x2F;</span><br><span class="line">5. flavor1Debug&#x2F;</span><br><span class="line">6. api1Flavor1Debug&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+<p>所以如果在这些目录下如果存在同名文件将导致编译冲突。</p>
+<p>如果需要考虑其他的构建源，则可以考虑通过 <code>sourceSets {}</code>进行设置，因为 <code>sourceSet</code> 也支持变体设置因此可以通过以下设置，对单独构建变体进行设置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">android &#123;</span><br><span class="line">    sourceSets &#123;</span><br><span class="line">        api2Flavor2 &#123;</span><br><span class="line">            java.srcDirs &#x3D; [ project.getProjectDir().getAbsolutePath() + &#39;&#x2F;src&#x2F;api2Flavor2&#x2F;temp&#39;]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+<p>这样就在 <code>api2Flavor2</code> 变体构建时，将 ‘/src/api2Flavor2/temp’ 纳入构建范围</p>
+<h3 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h3><ul>
+<li>一起编译 java/ 目录中的所有源代码以生成单一的输出。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">注：对于给定的构建变体，如果找到两个或两个以上定义同一 Java 类的源集目录，Gradle 就会引发一个构建错误。例如，在构建调试 APK 时，您不能同时定义 src&#x2F;debug&#x2F;Utility.java 和 src&#x2F;main&#x2F;Utility.java。这是因为 Gradle 会在构建过程中检查这两个目录并引发“duplicate class”错误。如果针对不同的构建类型需要不同版本的 Utility.java，您可以让每个构建类型定义其自己的文件版本，而不将其包含在 main&#x2F; 源集中。</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+<ul>
+<li>所有清单合并为单个清单。将按照上述列表中的相同顺序指定优先级。也就是说，某个构建类型的清单设置会替换某个产品风味的清单设置，依此类推。如需了解更多信息，请阅读合并清单。</li>
+<li>同样，values/ 目录中的文件也会合并在一起。如果两个文件同名，例如存在两个 strings.xml 文件，将按照上述列表中的相同顺序指定优先级。也就是说，在构建类型源集中的文件中定义的值将会替换产品风味中同一文件中定义的值，依此类推。</li>
+<li>res/ 和 asset/ 目录中的资源将打包到一起。如果两个或两个以上的源集中定义有同名资源，将按照上述列表中的相同顺序指定优先级。</li>
+<li>最后，在构建 APK 时，Gradle 会为随库模块依赖项包含的资源和清单分配最低的优先级。</li>
+</ul>
+<h2 id="变体依赖"><a href="#变体依赖" class="headerlink" title="变体依赖"></a>变体依赖</h2><p>正如源设置一样，依赖也支持变体依赖</p>
+<p>可以通过添加变体+依赖方式进行设置。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    api2Flavor2Compile &#39;junit:junit:4.12&#39;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/" class="lazyload" data-src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw=="  alt="点击并拖拽以移动"></p>
+</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Gradle/">Gradle</a></div><div class="post_share"></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019/05/01/OkHttp/"><img class="prev_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">OkHttp</div></div></a></div><div class="next-post pull_right"><a href="/2018/05/24/Gradle%E9%85%8D%E7%BD%AEKotlin%E7%8E%AF%E5%A2%83/"><img class="next_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Gradle配置Kotlin环境</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2020/06/01/Gradle中Task应用/" title="Gradle中Task应用"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-01</div><div class="relatedPosts_title">Gradle中Task应用</div></div></a></div><div class="relatedPosts_item"><a href="/2018/05/24/Gradle配置Kotlin环境/" title="Gradle配置Kotlin环境"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-05-24</div><div class="relatedPosts_title">Gradle配置Kotlin环境</div></div></a></div><div class="relatedPosts_item"><a href="/2018/05/20/Groovy与Java差异简记/" title="Groovy与Java差异简记"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-05-20</div><div class="relatedPosts_title">Groovy与Java差异简记</div></div></a></div><div class="relatedPosts_item"><a href="/2020/06/09/Transform的基本应用/" title="Transform的基本应用"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2020-06-09</div><div class="relatedPosts_title">Transform的基本应用</div></div></a></div></div><div class="clear_both"></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2014 - 2020 By Bevis</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
