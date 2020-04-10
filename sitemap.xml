@@ -2,9 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>http://yoursite.com/2015/04/10/OkHttp/</loc>
+    <loc>http://yoursite.com/2016/05/10/Handler%E5%AD%A6%E4%B9%A0%E5%B0%8F%E8%AE%B0/</loc>
     
-    <lastmod>2020-04-10T12:26:14.807Z</lastmod>
+    <lastmod>2020-04-10T12:36:39.293Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2015/08/10/HTTP%E5%AD%A6%E4%B9%A0%E5%B0%8F%E8%AE%B0/</loc>
+    
+    <lastmod>2020-04-10T12:36:01.114Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/05/01/OkHttp/</loc>
+    
+    <lastmod>2020-04-10T12:32:27.694Z</lastmod>
     
   </url>
   
