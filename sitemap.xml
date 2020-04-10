@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/05/15/JVM%E4%BA%86%E8%A7%A3/</loc>
+    
+    <lastmod>2020-04-10T13:30:15.914Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2018/06/01/Gradle%E4%B8%ADTask%E5%BA%94%E7%94%A8/</loc>
     
     <lastmod>2020-04-10T13:20:09.301Z</lastmod>
