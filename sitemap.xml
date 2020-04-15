@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2019/02/14/Jetpack-Lifecycle/</loc>
+    
+    <lastmod>2020-04-15T03:01:40.271Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2019/05/14/AndroidQ%E9%80%82%E9%85%8D/</loc>
     
     <lastmod>2020-04-14T15:55:09.393Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://yoursite.com/2016/05/01/Hexo%E6%90%AD%E5%BB%BA/</loc>
     
     <lastmod>2020-04-14T15:46:04.671Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2019/02/14/Jetpack-Lifecycle/</loc>
-    
-    <lastmod>2020-04-14T15:35:05.412Z</lastmod>
     
   </url>
   
