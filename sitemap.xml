@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/04/11/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-ArrayList/</loc>
+    
+    <lastmod>2020-04-22T17:38:13.473Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/04/23/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-HashMap/</loc>
+    
+    <lastmod>2020-04-22T17:38:06.581Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/04/12/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-LinkedList/</loc>
+    
+    <lastmod>2020-04-22T17:37:30.972Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/07/22/Android%E4%B8%AD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95API/</loc>
     
     <lastmod>2020-04-22T06:10:38.762Z</lastmod>
@@ -68,20 +89,6 @@
     <loc>http://yoursite.com/2018/03/03/Repo%E6%93%8D%E4%BD%9C/</loc>
     
     <lastmod>2020-04-12T18:45:22.060Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/04/12/%E9%9B%86%E5%90%88%E7%B1%BB-LinkedList/</loc>
-    
-    <lastmod>2020-04-12T01:48:55.002Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/04/11/%E9%9B%86%E5%90%88%E7%B1%BB-ArrayList/</loc>
-    
-    <lastmod>2020-04-11T16:29:57.322Z</lastmod>
     
   </url>
   
