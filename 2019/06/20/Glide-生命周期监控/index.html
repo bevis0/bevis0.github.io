@@ -1,0 +1,139 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Glide-生命周期监控 | Bevis技术小站</title><meta name="description" content="Glide-生命周期监控"><meta name="keywords" content="Android,Glide"><meta name="author" content="Bevis"><meta name="copyright" content="Bevis"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Glide-生命周期监控"><meta name="twitter:description" content="Glide-生命周期监控"><meta name="twitter:image" content="http://yoursite.com/img/post.jpg"><meta property="og:type" content="article"><meta property="og:title" content="Glide-生命周期监控"><meta property="og:url" content="http://yoursite.com/2019/06/20/Glide-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9B%91%E6%8E%A7/"><meta property="og:site_name" content="Bevis技术小站"><meta property="og:description" content="Glide-生命周期监控"><meta property="og:image" content="http://yoursite.com/img/post.jpg"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
+var t = Cookies.get("theme")
+if (autoChangeMode == '1'){
+  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined){
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport){
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour < 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+  }
+  } else if (t == 'light') activateLightMode()
+  else activateDarkMode()
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://yoursite.com/2019/06/20/Glide-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9B%91%E6%8E%A7/"><link rel="prev" title="Glide-缓存机制" href="http://yoursite.com/2019/06/24/Glide-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/"><link rel="next" title="Android Q适配" href="http://yoursite.com/2019/05/14/AndroidQ%E9%80%82%E9%85%8D/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  highlightShrink: 'false',
+  isFontAwesomeV5: false,
+  isPhotoFigcaption: false
+  
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isSidebar: true  
+  }</script><noscript><style>
+#page-header {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Bevis技术小站" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">27</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">13</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、场景的上下文"><span class="toc-number">1.</span> <span class="toc-text">一、场景的上下文</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、监控和监控器管理"><span class="toc-number">2.</span> <span class="toc-text">二、监控和监控器管理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#2-1-Fragment-为例"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 Fragment 为例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-2-Activity"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 Activity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-3-Application"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 Application</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、监控器中的维护"><span class="toc-number">3.</span> <span class="toc-text">三、监控器中的维护</span></a></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/post.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Bevis技术小站</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">Glide-生命周期监控</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date" title="发表于 2019-06-20 20:47:07"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2019-06-20</time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Android/">Android</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><p>在框架中，经常会遇到内存泄漏问题，这就涉及到怎么去感知观测到Activity / Fragment 的生命周期，从而根据该周期进行内存的管理。（大部分情况下这两种组合视图构件，能应对比较多的场景） ，对Glide中，提供了不错的监控方案。</p>
+<h1 id="一、场景的上下文"><a href="#一、场景的上下文" class="headerlink" title="一、场景的上下文"></a>一、场景的上下文</h1><p>在Glide中是需要传入所需要感知的上下文信息，比如  <code>with(Context)</code> ，<code>with(Fragment)</code> 等，这里的上下文不局限于 Context，包括</p>
+<ul>
+<li>Application  </li>
+<li>Fragment  </li>
+<li>Activity</li>
+<li>View </li>
+</ul>
+<blockquote>
+<p>其中对于View的感知是借助于 View 所提供的上下文 <code>View.getContext</code>（这就要求View必须是Attached后的情况了），Glide将最终转化为 <code>Application</code> 或 <code>Activity</code>的感知，而对于嵌套<code>Fragment</code>无法获知，情况比较无解（因为无法从View中直接获得 Fragment的上下文信息，其他办法或许可以，比如标记后遍历获取ViewTree），建议更多的是根据实际情况选择传入的上下文对象。</p>
+</blockquote>
+<h1 id="二、监控和监控器管理"><a href="#二、监控和监控器管理" class="headerlink" title="二、监控和监控器管理"></a>二、监控和监控器管理</h1><h2 id="2-1-Fragment-为例"><a href="#2-1-Fragment-为例" class="headerlink" title="2.1 Fragment 为例"></a>2.1 Fragment 为例</h2><p>从 <code>with(Fragment)</code> 开始入手，通过代码跟着可以进入到实际的管理类<code>RequestManagerRetriever</code> <code>get(Fragment)</code>中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@NonNull</span><br><span class="line">public RequestManager get(@NonNull Fragment fragment) &#123;</span><br><span class="line">  Preconditions.checkNotNull(</span><br><span class="line">      fragment.getContext(),</span><br><span class="line">      &quot;You cannot start a load on a fragment before it is attached or after it is destroyed&quot;);</span><br><span class="line">  if (Util.isOnBackgroundThread()) &#123;</span><br><span class="line">    return get(fragment.getContext().getApplicationContext());</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    FragmentManager fm &#x3D; fragment.getChildFragmentManager();</span><br><span class="line">    return supportFragmentGet(fragment.getContext(), fm, fragment, fragment.isVisible());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<blockquote>
+<p>对于异步下去进行上下文 <code>with</code> 处理，由于可能已经发生泄漏，所以为了避免这个情况，Glide 默认将上下文重置为 <code>Application</code> 上。</p>
+</blockquote>
+<p>  这里继续 <code>supportFragmentGet</code></p>
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  @NonNull</span><br><span class="line">private RequestManager supportFragmentGet(</span><br><span class="line">    @NonNull Context context,</span><br><span class="line">    @NonNull FragmentManager fm,</span><br><span class="line">    @Nullable Fragment parentHint,</span><br><span class="line">    boolean isParentVisible) &#123;</span><br><span class="line">  SupportRequestManagerFragment current &#x3D;</span><br><span class="line">      getSupportRequestManagerFragment(fm, parentHint, isParentVisible);</span><br><span class="line">  RequestManager requestManager &#x3D; current.getRequestManager();</span><br><span class="line">  if (requestManager &#x3D;&#x3D; null) &#123;</span><br><span class="line">    &#x2F;&#x2F; TODO(b&#x2F;27524013): Factor out this Glide.get() call.</span><br><span class="line">    Glide glide &#x3D; Glide.get(context);</span><br><span class="line">    requestManager &#x3D;</span><br><span class="line">        factory.build(</span><br><span class="line">            glide, current.getGlideLifecycle(), current.getRequestManagerTreeNode(), context);</span><br><span class="line">    current.setRequestManager(requestManager);</span><br><span class="line">  &#125;</span><br><span class="line">  return requestManager;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+  <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  @NonNull</span><br><span class="line">private SupportRequestManagerFragment getSupportRequestManagerFragment(</span><br><span class="line">    @NonNull final FragmentManager fm, @Nullable Fragment parentHint, boolean isParentVisible) &#123;</span><br><span class="line">  SupportRequestManagerFragment current &#x3D;</span><br><span class="line">      (SupportRequestManagerFragment) fm.findFragmentByTag(FRAGMENT_TAG);</span><br><span class="line">  if (current &#x3D;&#x3D; null) &#123;</span><br><span class="line">    current &#x3D; pendingSupportRequestManagerFragments.get(fm);</span><br><span class="line">    if (current &#x3D;&#x3D; null) &#123;</span><br><span class="line">      current &#x3D; new SupportRequestManagerFragment();</span><br><span class="line">      current.setParentFragmentHint(parentHint);</span><br><span class="line">      if (isParentVisible) &#123;</span><br><span class="line">        current.getGlideLifecycle().onStart();</span><br><span class="line">      &#125;</span><br><span class="line">      pendingSupportRequestManagerFragments.put(fm, current);</span><br><span class="line">      fm.beginTransaction().add(current, FRAGMENT_TAG).commitAllowingStateLoss();</span><br><span class="line">      handler.obtainMessage(ID_REMOVE_SUPPORT_FRAGMENT_MANAGER, fm).sendToTarget();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return current;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>两结合一起看，比较直观的可以知道 <code>SupportRequestManagerFragment</code> 是作为一个监控器的存在，寄宿于 FragmentMananger 中，负责对 Fragment 的生命周期进行监控。</p>
+<blockquote>
+<p>由于 <code>commit</code> 操作可能不是同步执行（因为commit 只会在主线程中执行，如果在异步中则post回主线程后执行），因此这里暂时暂存在 <code>pendingSupportRequestManagerFragments</code> ，防止重复创建添加 <code>Fragment</code>，需要等待主线程的 <code>handler</code> 完成回调才能从 <code>pendingSupportRequestManagerFragments</code> 移除（因为这时候已经commit 成功了）。</p>
+</blockquote>
+<blockquote>
+<p>Glide 在 <code>SupportRequestManagerFragment</code> 也提供了一套生命周期订阅器， 如果当前 Fragment 已展示，则补充对该订阅者们的 onStart()事件</p>
+</blockquote>
+<p>另外针对非 Support 下 Fragment 的 兼容，可以忽律，目前google也不再维护，只作为补充兼容来看，具体内容以下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">private android.app.Fragment findFragment(@NonNull View target, @NonNull Activity activity) &#123;</span><br><span class="line">  tempViewToFragment.clear();</span><br><span class="line">  findAllFragmentsWithViews(activity.getFragmentManager(), tempViewToFragment);</span><br><span class="line"></span><br><span class="line">  android.app.Fragment result &#x3D; null;</span><br><span class="line"></span><br><span class="line">  View activityRoot &#x3D; activity.findViewById(android.R.id.content);</span><br><span class="line">  View current &#x3D; target;</span><br><span class="line">  while (!current.equals(activityRoot)) &#123;</span><br><span class="line">    result &#x3D; tempViewToFragment.get(current);</span><br><span class="line">    if (result !&#x3D; null) &#123;</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">    if (current.getParent() instanceof View) &#123;</span><br><span class="line">      current &#x3D; (View) current.getParent();</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      break;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  tempViewToFragment.clear();</span><br><span class="line">  return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>简单的说，Glide 通过将自己实现的<code>Fragment</code> 添加到相应目标下的 <code>FragmentManager</code> 中进行驻留。可以实现两个好处：</p>
+<ul>
+<li>依赖系统提供回调，可以对上下文对象的生命周期进行观察</li>
+<li>依赖<code>FragmentManager</code>、<code>ChildFragmentManager</code>对<code>Fragment</code>的管理，监视器<code>Fragment</code>不需要自己维护，可跟随上下文对象生命周期的结束自动释放，无需担心内存泄漏</li>
+</ul>
+<h2 id="2-2-Activity"><a href="#2-2-Activity" class="headerlink" title="2.2 Activity"></a>2.2 Activity</h2><p>有了以上的大概描述，就不难理解Activity是怎么追踪的，因为在Actvity 的<code>FragmentManager</code>（<code>SupportFragmentActivity</code>）的 <code>Fragment</code>也是可以感知当前宿主的生命周期，所以同理，在对应的Manager 中 add 如自己的监控器<code>SupportRequestManagerFragment</code>。</p>
+<h2 id="2-3-Application"><a href="#2-3-Application" class="headerlink" title="2.3 Application"></a>2.3 Application</h2><p>另外这里面比较特殊的是 <code>Application</code> 上下文对象的处理，由于跟随的是整个 App 的周期，因此无需担心内存泄漏问题。因此在全局的<code>RequestManagerRetriever</code> 中单独维护了一个全局的 <code>RequesterManager</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class RequestManagerRetriever implements Handler.Callback &#123;</span><br><span class="line"> ...</span><br><span class="line"> private volatile RequestManager applicationManager;</span><br><span class="line"> ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="三、监控器中的维护"><a href="#三、监控器中的维护" class="headerlink" title="三、监控器中的维护"></a>三、监控器中的维护</h1><p><code>SupportRequestManagerFragment</code> 需要维护几个内容</p>
+<ul>
+<li>维护自身及子Fragment的响应，<code>RequestManagerTreeNode</code> 提供自身向下<code>SupportRequestManagerFragment</code> 子节点的 <code>RequestMananger</code> 的沟通，对于经常看到的场景，我们在移除父Fragment后，同时也需要影响子 <code>RequestManager</code>的内容</li>
+<li>提供<code>ActivityFragmentLifecycle</code>观察者注册，暴露周期观察接口，为其他功能观察当前上下文的生命周期提供入口。</li>
+</ul>
+<blockquote>
+<p><code>SupportRequestManagerFragment</code> 并不直接负责 <code>RequestManger</code>的调用，只是提供构造和存在。</p>
+</blockquote>
+<blockquote>
+<p><code>SupportRequestManagerFragment</code> 会在Fragment 发生 Attach 后，执行 root Fragment 绑定，维护父子节点的的关联关系（<code>rootRequestManagerFragment</code>、<code>childRequestManagerFragments</code>）</p>
+</blockquote>
+<p>基本上 <code>SupportRequestManagerFragment</code> 是作为该上下文中所独有内容的贮存的存在，并且维护着该上下文可能存在的关联关系，比如多个Fragment 嵌套时的关联沟通。属于承上启下适配器角色。</p>
+</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Android/">Android</a><a class="post-meta__tags" href="/tags/Glide/">Glide</a></div><div class="post_share"></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2019/06/24/Glide-%E7%BC%93%E5%AD%98%E6%9C%BA%E5%88%B6/"><img class="prev_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Glide-缓存机制</div></div></a></div><div class="next-post pull_right"><a href="/2019/05/14/AndroidQ%E9%80%82%E9%85%8D/"><img class="next_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Android Q适配</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2019/06/24/Glide-缓存机制/" title="Glide-缓存机制"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-06-24</div><div class="relatedPosts_title">Glide-缓存机制</div></div></a></div><div class="relatedPosts_item"><a href="/2019/01/13/Android源码编译和阅读/" title="Android源码编译和阅读"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-01-13</div><div class="relatedPosts_title">Android源码编译和阅读</div></div></a></div><div class="relatedPosts_item"><a href="/2016/05/15/Android未捕获异常处理/" title="Android 未捕获异常处理"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2016-05-15</div><div class="relatedPosts_title">Android 未捕获异常处理</div></div></a></div><div class="relatedPosts_item"><a href="/2019/02/14/Jetpack-Lifecycle/" title="Jetpack-Lifecycle"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2019-02-14</div><div class="relatedPosts_title">Jetpack-Lifecycle</div></div></a></div><div class="relatedPosts_item"><a href="/2018/03/03/Repo操作/" title="Repo操作"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-03-03</div><div class="relatedPosts_title">Repo操作</div></div></a></div><div class="relatedPosts_item"><a href="/2016/05/10/Handler学习小记/" title="Handler学习小记"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2016-05-10</div><div class="relatedPosts_title">Handler学习小记</div></div></a></div></div><div class="clear_both"></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2014 - 2020 By Bevis</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
