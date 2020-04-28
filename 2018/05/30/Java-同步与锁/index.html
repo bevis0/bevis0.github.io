@@ -1,0 +1,481 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Java-同步与锁 | Bevis技术小站</title><meta name="description" content="Java-同步与锁"><meta name="keywords" content="JVM,Java,多线程"><meta name="author" content="Bevis"><meta name="copyright" content="Bevis"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.ico"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="crossorigin"/><meta name="twitter:card" content="summary"><meta name="twitter:title" content="Java-同步与锁"><meta name="twitter:description" content="Java-同步与锁"><meta name="twitter:image" content="http://yoursite.com/img/post.jpg"><meta property="og:type" content="article"><meta property="og:title" content="Java-同步与锁"><meta property="og:url" content="http://yoursite.com/2018/05/30/Java-%E5%90%8C%E6%AD%A5%E4%B8%8E%E9%94%81/"><meta property="og:site_name" content="Bevis技术小站"><meta property="og:description" content="Java-同步与锁"><meta property="og:image" content="http://yoursite.com/img/post.jpg"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>var autoChangeMode = '1'
+var t = Cookies.get("theme")
+if (autoChangeMode == '1'){
+  var isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+  var isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+  var isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined){
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport){
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour < 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+  }
+  } else if (t == 'light') activateLightMode()
+  else activateDarkMode()
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="http://yoursite.com/2018/05/30/Java-%E5%90%8C%E6%AD%A5%E4%B8%8E%E9%94%81/"><link rel="prev" title="Gradle中Task应用" href="http://yoursite.com/2018/06/01/Gradle%E4%B8%ADTask%E5%BA%94%E7%94%A8/"><link rel="next" title="Gradle配置Kotlin环境" href="http://yoursite.com/2018/05/24/Gradle%E9%85%8D%E7%BD%AEKotlin%E7%8E%AF%E5%A2%83/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  highlightShrink: 'false',
+  isFontAwesomeV5: false,
+  isPhotoFigcaption: false
+  
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isSidebar: true  
+  }</script><noscript><style>
+#page-header {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.0"><link rel="alternate" href="/atom.xml" title="Bevis技术小站" type="application/atom+xml">
+</head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">30</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">15</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">6</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div></div></div><i class="fa fa-arrow-right on" id="toggle-sidebar" aria-hidden="true">     </i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#多核心多线程"><span class="toc-number">1.</span> <span class="toc-text">多核心多线程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#指令执行的有序性"><span class="toc-number">2.</span> <span class="toc-text">指令执行的有序性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#happen-before-原则"><span class="toc-number">2.1.</span> <span class="toc-text">happen-before 原则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#单线程happen-before原则"><span class="toc-number">2.1.1.</span> <span class="toc-text">单线程happen-before原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#锁的happen-before原则"><span class="toc-number">2.1.2.</span> <span class="toc-text">锁的happen-before原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#volatile的happen-before原则"><span class="toc-number">2.1.3.</span> <span class="toc-text">volatile的happen-before原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#happen-before的传递性原则"><span class="toc-number">2.1.4.</span> <span class="toc-text">happen-before的传递性原则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#其他原则"><span class="toc-number">2.1.5.</span> <span class="toc-text">其他原则</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存屏障"><span class="toc-number">2.2.</span> <span class="toc-text">内存屏障</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#内存屏障类型"><span class="toc-number">2.2.1.</span> <span class="toc-text">内存屏障类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#final-关键字"><span class="toc-number">2.2.2.</span> <span class="toc-text">final 关键字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#单例中的初始化问题"><span class="toc-number">2.2.3.</span> <span class="toc-text">单例中的初始化问题</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#多线程间的可见性"><span class="toc-number">3.</span> <span class="toc-text">多线程间的可见性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#线程内存结构"><span class="toc-number">3.1.</span> <span class="toc-text">线程内存结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存模型交互"><span class="toc-number">3.2.</span> <span class="toc-text">内存模型交互</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#作用于主内存"><span class="toc-number">3.2.1.</span> <span class="toc-text">作用于主内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关于-read-write、load-store-的连续性"><span class="toc-number">3.2.2.</span> <span class="toc-text">关于 read-write、load-store 的连续性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#交互规则和约束"><span class="toc-number">3.2.3.</span> <span class="toc-text">交互规则和约束</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile声明"><span class="toc-number">3.3.</span> <span class="toc-text">volatile声明</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU-层的保证"><span class="toc-number">3.4.</span> <span class="toc-text">CPU 层的保证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#总线锁定"><span class="toc-number">3.4.1.</span> <span class="toc-text">总线锁定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#缓存锁定"><span class="toc-number">3.4.2.</span> <span class="toc-text">缓存锁定</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#处理器原子性"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">处理器原子性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#缓存一致性（嗅探技术）"><span class="toc-number">3.5.</span> <span class="toc-text">缓存一致性（嗅探技术）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#缓存行"><span class="toc-number">3.5.1.</span> <span class="toc-text">缓存行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MESI-协议"><span class="toc-number">3.5.2.</span> <span class="toc-text">MESI 协议</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于锁"><span class="toc-number">4.</span> <span class="toc-text">关于锁</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对象头"><span class="toc-number">4.1.</span> <span class="toc-text">对象头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁升级"><span class="toc-number">4.2.</span> <span class="toc-text">锁升级</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#无锁"><span class="toc-number">4.2.1.</span> <span class="toc-text">无锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#偏向锁"><span class="toc-number">4.2.2.</span> <span class="toc-text">偏向锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#轻量锁"><span class="toc-number">4.2.3.</span> <span class="toc-text">轻量锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重量锁"><span class="toc-number">4.2.4.</span> <span class="toc-text">重量锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Synchronized（monitor-监控器）"><span class="toc-number">4.3.</span> <span class="toc-text">Synchronized（monitor 监控器）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他锁"><span class="toc-number">4.4.</span> <span class="toc-text">其他锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#自旋锁、适应性自旋锁"><span class="toc-number">4.4.1.</span> <span class="toc-text">自旋锁、适应性自旋锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#可重入锁"><span class="toc-number">4.4.2.</span> <span class="toc-text">可重入锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#乐观、悲观锁"><span class="toc-number">4.4.3.</span> <span class="toc-text">乐观、悲观锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#独享、共享锁"><span class="toc-number">4.4.4.</span> <span class="toc-text">独享、共享锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#公平、非公平锁"><span class="toc-number">4.4.5.</span> <span class="toc-text">公平、非公平锁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#锁工具-慢慢补充"><span class="toc-number">4.5.</span> <span class="toc-text">锁工具(慢慢补充)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AbscractQueuedSynchronizer-AQS"><span class="toc-number">4.5.1.</span> <span class="toc-text">AbscractQueuedSynchronizer (AQS)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#获取锁"><span class="toc-number">4.5.1.1.</span> <span class="toc-text">获取锁</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#解锁"><span class="toc-number">4.5.1.2.</span> <span class="toc-text">解锁</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CAS"><span class="toc-number">4.5.2.</span> <span class="toc-text">CAS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#ABA-问题"><span class="toc-number">4.5.2.1.</span> <span class="toc-text">ABA 问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Lock接口"><span class="toc-number">4.5.3.</span> <span class="toc-text">Lock接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReentrantLock"><span class="toc-number">4.5.4.</span> <span class="toc-text">ReentrantLock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReadWriteLock"><span class="toc-number">4.5.5.</span> <span class="toc-text">ReadWriteLock</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ReentrantReadWriteLock"><span class="toc-number">4.5.6.</span> <span class="toc-text">ReentrantReadWriteLock</span></a></li></ol></li></ol></li></ol></div></div></div><div id="body-wrap"><div class="post-bg" id="nav" style="background-image: url(/img/post.jpg)"><div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">Bevis技术小站</a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 文章</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span></span></div><div id="post-info"><div id="post-title"><div class="posttitle">Java-同步与锁</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date" title="发表于 2018-05-30 21:28:18"><i class="fa fa-calendar" aria-hidden="true"></i> 发表于 2018-05-30</time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"></span><span class="post-meta-commentcount"></span></div></div></div></div><main class="layout_post" id="content-inner"><article id="post"><div id="article-container"><p>同步性的要求一般是围绕着 有序性和可见性进行，即使是锁也是为了辅助其目的进行。</p>
+<h1 id="多核心多线程"><a href="#多核心多线程" class="headerlink" title="多核心多线程"></a>多核心多线程</h1><p>任何机器上的执行到最后都需要将执行的代码转化为一条一条的机器指令，我们经常所见的一行代码，可能会由十几条指令所构成。</p>
+<p>在目前越来越先进的时代，CPU集成了多个处理器核心，允许在同一时间同时执行多个指令，以提高执行效率。</p>
+<p>因此这就涉及到某些指令是否有无关联性，是否可被优化同时进行，而有些指令存在必然的上下连续，如果轻易变更执行顺序则容易发生二义，导致结果不准确，因此再此基础上，需要保证这些指令执行的原子性，进而体现出有序性。</p>
+<p>如果这不容易理解可以看一个经典 <code>a++</code> 例子</p>
+<p>比如连续两次的 a++递增操作，如果当前由两个CPU分别对这两个指令进行处理，则会导致两个CPU从总内存读取到缓存的值都为1，当递增进行时，两个处理器都是对 1 的递增，从而导致i的结果最终为 2 而不是3。</p>
+<p><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/31237/WEBRESOURCE1263a5bb2ae96b8a03c721a75ebd18fb"  alt="image"></p>
+<p>两个连续的<code>a++</code> 如果没有有序性的保证，则会在指令阶段被两个CPU所同时执行，由于两者感知不到对方的联系，结果会导致异常。</p>
+<blockquote>
+<p>cpu 缓存目前发展的比较快，目前存在三级缓存 L1、L2、L3 Cache ，则都是为了缓和CPU高速与低俗主内存的差距。缓存功能上会有差些差别，比如一个用于存数据的 L1dCache 一个用于存指令的 L1i Cache，缓存的结构在不同平台上可能会有所差异，这取决于处理器设计。</p>
+</blockquote>
+<p>Java 为支持多线程技术，提供了比较多的技术支持。</p>
+<h1 id="指令执行的有序性"><a href="#指令执行的有序性" class="headerlink" title="指令执行的有序性"></a>指令执行的有序性</h1><p>Java 会根据一些既定的原则在编译时为我们梳理执行的有序的约束，而这些约束是开发者所需要了解的。</p>
+<h2 id="happen-before-原则"><a href="#happen-before-原则" class="headerlink" title="happen-before 原则"></a>happen-before 原则</h2><p>happen-before 是对执行顺序规则的约束。</p>
+<h3 id="单线程happen-before原则"><a href="#单线程happen-before原则" class="headerlink" title="单线程happen-before原则"></a>单线程happen-before原则</h3><p><code>在同一个线程中，书写在前面的操作happen-before后面的操作。</code> </p>
+<p>这里指的是对于存在上下关联的代码，在同一个线程代码中需要保持其有序性。比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int i &#x3D; 1</span><br><span class="line">int i1 &#x3D; i + 1</span><br><span class="line">int i2 &#x3D; i + i1</span><br></pre></td></tr></table></figure>
+
+<p>i1 依赖于 i，i2依赖于i1，并且在同一线程代码块中执行，为了保证其依赖性关系，必须保证i先于i1、i1先于i2。</p>
+<p>如果</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int i &#x3D; 1</span><br><span class="line">int i1 &#x3D; 2</span><br><span class="line">int i2 &#x3D; i + i2</span><br></pre></td></tr></table></figure>
+
+<p>则i 和 i1的有序性则不在被关心，但是i 和 i1 必须在i2前完成。</p>
+<h3 id="锁的happen-before原则"><a href="#锁的happen-before原则" class="headerlink" title="锁的happen-before原则"></a>锁的happen-before原则</h3><p><code>同一个锁的unlock操作，happen-before此锁的lock操作</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class A &#123;</span><br><span class="line"></span><br><span class="line">   public synchronized void a1()&#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">   public synchronized void a2()&#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;    </span><br><span class="line">   </span><br><span class="line">    public synchronized void a3()&#123;</span><br><span class="line">       ...</span><br><span class="line">   &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果执行有</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">A a &#x3D; A()</span><br><span class="line"></span><br><span class="line">a.a1()</span><br><span class="line">a.a2()</span><br><span class="line">Thread() &#123;</span><br><span class="line">    public run() &#123;</span><br><span class="line">        a.a3()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;.start()</span><br></pre></td></tr></table></figure>
+
+<p>则如果 a3 可被执行并且通过<code>synchronized</code>获取到锁（lock) 则在 解锁前（unlock）a1(), a2() 都将不会得到锁（lock），只有到 lock - unlock 完成，才会轮到下一个目标获得锁继续有效向下分配执行。</p>
+<h3 id="volatile的happen-before原则"><a href="#volatile的happen-before原则" class="headerlink" title="volatile的happen-before原则"></a>volatile的happen-before原则</h3><p><code>对一个volatile变量的写操作，happen-before对此变量的任意操作(当然也包括写操作了)</code></p>
+<p>即表现为当一个变量声明为 volatile 时，当一个线程对该变量进行写入，则另一个线程必须发生可见性生效。</p>
+<p>详细例子可以参见 <a href="#volatile声明">volatile声明</a></p>
+<h3 id="happen-before的传递性原则"><a href="#happen-before的传递性原则" class="headerlink" title="happen-before的传递性原则"></a>happen-before的传递性原则</h3><p><code>如果A操作 happen-before B操作，B操作happen-before C操作，那么A操作happen-before C操作</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int a &#x3D; 1</span><br><span class="line">int b &#x3D; a + 1</span><br><span class="line">int c &#x3D; b + 1</span><br></pre></td></tr></table></figure>
+
+<p>以上  c 依赖于 b、b依赖于 a、则可以推断出 c 依赖于 a</p>
+<h3 id="其他原则"><a href="#其他原则" class="headerlink" title="其他原则"></a>其他原则</h3><ul>
+<li>线程启动的happen-before原则 </li>
+</ul>
+<p><code>同一个线程的start方法happen-before此线程的其它方法</code></p>
+<ul>
+<li>线程中断的happen-before原则 </li>
+</ul>
+<p><code>对线程interrupt方法的调用，happen-before被中断线程的检测到中断发送的代码</code></p>
+<ul>
+<li>线程终结的happen-before原则 </li>
+</ul>
+<p><code>线程中的所有操作都happen-before线程的终止检测</code></p>
+<ul>
+<li>对象创建的happen-before原则  </li>
+</ul>
+<p><code>一个对象的初始化完成先于他的finalize方法调用</code></p>
+<h2 id="内存屏障"><a href="#内存屏障" class="headerlink" title="内存屏障"></a>内存屏障</h2><p>通过规则约束了代码的顺序，而在底层中，Java还 通过内存屏障达到有序性目的。</p>
+<p>在开发中我们经常会需要用到 <code>volatitle</code> 关键字，为了让所修饰的变量，保证对其赋值先后执行的有序性，不会被编译器进行代码重排优化，从而导致结果的不正常的结果。</p>
+<p>比如 </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">class Main &#123;</span><br><span class="line">    public static int count &#x3D; 0;</span><br><span class="line">    public void main(Strig[] args) &#123;</span><br><span class="line">        count ++;</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                while(count &gt; 0) &#123;</span><br><span class="line">                    ....</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于线程的创建和count的执行并无联系，如果代码被重排，导致count++执行在线程启动后，则很容易导致线程的提前终止。而如果加上volatitle则没有这个问题。</p>
+<p>因此为了让开发者能精确控制某种情况，Java还提供了比较多技术，比如提到的 volatitle。而这些底层都是通过内存屏障所实现。</p>
+<p>内存屏障指的是一个CPU指令（不同平台指令命名不一样，这里内存屏障只是概念，比如x86 有  sfence 指令），用于确保特定操作的执行顺序、对一些数据影响其可见性。在之前所使用的lock 指令前缀，也是内存屏障实现一种。</p>
+<p>通过内存屏障指令，可以达到以下效果：</p>
+<ol>
+<li>确保指令前后不被重排。在所插入内存屏障的前后，保证前面指令先于后面执行，保证后面指令后于前面执行的效果，确保不被错误优化。</li>
+<li>会导致CPU缓存失效，从而导致CPU缓存刷新数据值</li>
+</ol>
+<h3 id="内存屏障类型"><a href="#内存屏障类型" class="headerlink" title="内存屏障类型"></a>内存屏障类型</h3><p>不同平台提供的内存屏障实现不一样，根据实现方面的不同，可以分为几种类型：</p>
+<p>可以分为对两个指令情况的顺序<br>Store: 将处理器缓存数据刷新到内存中<br>Load: 将内存中的数据拷贝到处理器缓存中</p>
+<table>
+<thead>
+<tr>
+<th>屏障类型</th>
+<th>指令顺序</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LoadLoad Barriers</td>
+<td>Load1;LoadLoad;Load2</td>
+<td>该屏障确保Load1数据的装载先于Load2及其后所有装载指令的的操作</td>
+</tr>
+<tr>
+<td>StoreStore Barriers</td>
+<td>Store1;StoreStore;Store2</td>
+<td>该屏障确保Store1立刻刷新数据到内存(使其对其他处理器可见)的操作先于Store2及其后所有存储指令的操作</td>
+</tr>
+<tr>
+<td>LoadStore Barriers</td>
+<td>Load1;LoadStore;Store2</td>
+<td>确保Load1的数据装载先于Store2及其后所有的存储指令刷新数据到内存的操作</td>
+</tr>
+<tr>
+<td>StoreLoad Barriers</td>
+<td>Store1;StoreLoad;Load1</td>
+<td>该屏障确保Store1立刻刷新数据到内存的操作先于Load2及其后所有装载装载指令的操作.它会使该屏障之前的所有内存访问指令(存储指令和访问指令)完成之后,才执行该屏障之后的内存访问指令</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>使用前需要确保使用的平台是否支持，比如x86 仅支持 StoreLoad Barriers</p>
+</blockquote>
+<ul>
+<li>CPU 接受到屏障指令后，不将屏障指令放入序列缓冲区，而是将屏障指令及其后续指令进入队列中（FIFO）</li>
+<li>在序列缓冲区的指令，允许被乱序执行</li>
+<li>执行队列中屏障指令，在执行过程中同时刷新缓存</li>
+<li>将剩余指令重新放回序列缓冲区</li>
+<li>重新恢复乱序执行</li>
+</ul>
+<h3 id="final-关键字"><a href="#final-关键字" class="headerlink" title="final 关键字"></a>final 关键字</h3><p>final 关键字算是对内存屏障一种实施，JVM会在初始化final后插入 StoresStores Barriers 屏障，保证将 final 加载后对 final即赋值操作，不会因为重排而导致的乱序，并且保证初始时之前对内存的可见性。</p>
+<p>因此 final 经常用于作为恶汉模式的单例初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public A &#123;</span><br><span class="line">    public static final A a &#x3D; new A()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="单例中的初始化问题"><a href="#单例中的初始化问题" class="headerlink" title="单例中的初始化问题"></a>单例中的初始化问题</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">public A &#123;</span><br><span class="line">    private static A a &#x3D; null</span><br><span class="line">    public void init &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">    public static A getInstance() &#123;</span><br><span class="line">        if(a &#x3D;&#x3D; null) &#123;</span><br><span class="line">            synchronized (A.class) &#123;</span><br><span class="line">                if(a &#x3D;&#x3D; null) &#123;</span><br><span class="line">                    a &#x3D; new A();</span><br><span class="line">                    a.init()</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return a;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上代码未单例模式构造中的一种饱汉模式。</p>
+<p>这里对 a 单例变量做了两次判断，并且第二次是通过 synchronized 进行同步块实现。</p>
+<p>在synchronized 中同样也实现了有序性和可见性，当触发同步块会强制对缓存进行更新，从而保证对a的可见性，同时由于有序性的保证，不会导致税 a 在 new A() 时，不会因为没有对a进行初始化（重排导致）而导致其他的问题</p>
+<h1 id="多线程间的可见性"><a href="#多线程间的可见性" class="headerlink" title="多线程间的可见性"></a>多线程间的可见性</h1><p>多线程的可见性是JVM在工作模式定义上所产生。</p>
+<h2 id="线程内存结构"><a href="#线程内存结构" class="headerlink" title="线程内存结构"></a>线程内存结构</h2><p>在JVM运行时，主要涉及三个角色，分别为主内存、线程、执行引擎。</p>
+<p>所有数据源的开始都是由主内存提供，对于所有线程都是可访问的。</p>
+<p>线程是执行的代理者，也是JVM中最小的执行单位，通过线程才能和执行引擎进行交互工作。</p>
+<h2 id="内存模型交互"><a href="#内存模型交互" class="headerlink" title="内存模型交互"></a>内存模型交互</h2><p>在JVM内存模型中，线程工作模式，是使用工作内存与主内存直接进行交互，线程在执行前会从主内存中获取对应的数据加载到工作内存中，在线程调用执行引擎执行中（或者执行引擎向线程索取）所需要的参数通过调用工作内存中的数据。</p>
+<p><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/31816/WEBRESOURCE59c7a5ee8e15c0b12c1a6ec4f9a21552"  alt="image"><br>为了保证工作的有序性，在主内存、工作内存和执行引擎间定义了一操作：</p>
+<h3 id="作用于主内存"><a href="#作用于主内存" class="headerlink" title="作用于主内存"></a>作用于主内存</h3><table>
+<thead>
+<tr>
+<th>指令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>lock（锁定）</td>
+<td>把一个变量标识为一条线程独占状态，执行后将清空该线程工作内存中此变量的值，执行引擎使用时将重新执行load或assign初始化</td>
+</tr>
+<tr>
+<td>unlock（解锁）</td>
+<td>把一个处于lock状态的变量释放出来，释放后的变量才可以被其他线程锁定</td>
+</tr>
+<tr>
+<td>read（读取）</td>
+<td>将一个变量值从主内存中传输到工作内存中，便于load后续操作。</td>
+</tr>
+<tr>
+<td>write（写入）</td>
+<td>把store操作从工作内存中得到的变量的值放入主内存的变量中</td>
+</tr>
+<tr>
+<td>### 作用于工作内存</td>
+<td></td>
+</tr>
+<tr>
+<td>指令</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>————–</td>
+<td>————————————————————</td>
+</tr>
+<tr>
+<td>use（使用）</td>
+<td>把工作内存中一个变量的值传递给执行引擎，每当虚拟机遇到一个需要使用到变量的值的字节码指令时将会执行这个操作</td>
+</tr>
+<tr>
+<td>assign（赋值）</td>
+<td>把一个从执行引擎接收到的值赋给工作内存的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作</td>
+</tr>
+<tr>
+<td>store（存储）</td>
+<td>把工作内存中一个变量的值传送到主内存中，以便随后的write操作使用</td>
+</tr>
+<tr>
+<td>load（载入）</td>
+<td>把read操作从主内存中得到的变量值放到工作内存的变量副本中</td>
+</tr>
+</tbody></table>
+<h3 id="关于-read-write、load-store-的连续性"><a href="#关于-read-write、load-store-的连续性" class="headerlink" title="关于 read-write、load-store 的连续性"></a>关于 read-write、load-store 的连续性</h3><p>read 可以理解为把变量从主内存（shared memory）读取到CPU local memory （CPU cache）</p>
+<p>write 则是从 CPU local memory 复制到主内存中</p>
+<p>load 通过 CPU local memory 读取到工作内存 JVM stack （或者JVM 寄存器）中</p>
+<p>store 则将 工作内存的数据写入到 CPU local memory 下，等待被写回主内存。</p>
+<p>由于主内存和CPU缓存是保持同步（嗅探、缓存一致性），当一个CPU发生与主内存的存取操作，其他CPU同时也会得到通知，从而保证多个处理器间的一致性，保证了程序处理的正确性。</p>
+<blockquote>
+<p>另外由于在架构上不同，并不能保证 read - load  1 ：n 操作可以支持，或者反之，因此通常仅要求 1：1 连续性操作即可，该兼容同样适用 load-store</p>
+</blockquote>
+<h3 id="交互规则和约束"><a href="#交互规则和约束" class="headerlink" title="交互规则和约束"></a>交互规则和约束</h3><p>考虑到内存结构的在运行上正确性、执行兼容性、可见性等问题，在以上操作中需要保证一定的规则。</p>
+<ul>
+<li>内存模型要求 read-load、 store-write 必须按顺序执行，但是不保证连续执行，因此可以在两个指令间插入其他指令</li>
+<li>不允许 read-load、store-write 操作单独出现，不允许一个变量从主内存读取但是工作内存不接受，或者从工作内存发起回写到主内存不接受的情况。</li>
+<li>不允许一个线程丢弃它的最近的 assign 操作，即变量在工作内存中改变了之后必须把该变化同步回主内存</li>
+<li>不允许一个线程无原因地（没有发生任何  assign 操作）把数据从线程的工作内存同步回到主内存中</li>
+<li>变量只能在主内存中“诞生”，不允许在工作内存中直接使用一个未被初始化（未执行过load或assign指令）的变量，换句话说，就是对一个变量实施use、store操作之前，必须先执行过 assign 和 load操作。</li>
+<li>一个变量在同一时刻只允许一条线程对其进行lock操作，允许同一条线程重复执行多次lock，但是需要执行相同次数的unlock操作才能被解锁</li>
+<li>如果一个变量执行lock操作，那将会清空工作内存中此变量的值，在执行引擎使用这个变量前，需要重新执行load或assign操作初始化变量的值</li>
+<li>对一个变量执行unlock操作之前，必须先把此变量同步回主内存中（执行store、write操作）</li>
+</ul>
+<h2 id="volatile声明"><a href="#volatile声明" class="headerlink" title="volatile声明"></a>volatile声明</h2><p>volidate 常用于一些变量的可见性声明，看下面一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">class Main &#123;</span><br><span class="line">    private static boolean close &#x3D; false;</span><br><span class="line">    public static void main(String[] arg) throws InterruptedException &#123;</span><br><span class="line">        Main main  &#x3D; new Main();</span><br><span class="line">        Thread a &#x3D; new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                super.run();</span><br><span class="line">                int count &#x3D; 0;</span><br><span class="line">                while (!close) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        count ++;</span><br><span class="line">                    &#125; catch (Exception e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                System.out.println(&quot;end thread , count &quot; + count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        a.start();</span><br><span class="line"></span><br><span class="line">        Thread b &#x3D; new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                super.run();</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(2000);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    e.printStackTrace();</span><br><span class="line">                &#125;</span><br><span class="line">                close &#x3D; true;</span><br><span class="line">                System.out.println(&quot;turn off thread &quot;);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        b.start();</span><br><span class="line">        Thread.sleep(5000);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以上例子分别设立 a、b两个线程，通过共享变量 close 控制 a线程的循环执行，可以发现共享变量 close 并没有设置 volatile，结果和预期一致。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">turn off thread </span><br><span class="line"></span><br><span class="line">Process finished with exit code 130 (interrupted by signal 2: SIGINT)</span><br></pre></td></tr></table></figure>
+
+<p>无法结束 a 线程循环状态。</p>
+<blockquote>
+<p>注意在以上实验 while (!close) {} 内不能使用含有任何锁的内容比如 锁（lock - unlock 一套）、Synconized 同步块、以及 System.out.println(..)方法内存在Synconized 同步块的情况，会导致在同步块结束时，对工作内存的强制更新，达到和可见性一样的目的，导致实验失败</p>
+</blockquote>
+<p>如果为 close 加上 <code>volatile</code> 则正常结果输出。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">turn off thread </span><br><span class="line">end thread , count -1153724066</span><br><span class="line"></span><br><span class="line">Process finished with exit code 0</span><br></pre></td></tr></table></figure>
+
+<p>通过对第37行代码汇编跟踪:<br><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/31538/598F5BEFC15E42A4AEE6AE227867248F"  alt="image"></p>
+<p>发现在执行 add 指令会增加 lock 前缀，这便是 volidate 的秘密所在。</p>
+<p>在LOCK指令解释中，当发生内存修改操作时，LOCK前缀会去调用加锁的 读-修改-写操作，这常会触发两种中的一种操作（根据实现不同而表现不同）总线锁定或缓存锁定，也就是当发生锁定时，只有执行的处理器可以进行读写操作，其他处理器是无法访问，如果为总线锁定则整个总线将无法访问（LOCK#信号机制），阻塞其他处理器，缓存锁定则仅对访问的内存区域地址。</p>
+<p>总而言之有lock 可以起到的几个作用：</p>
+<ul>
+<li>锁定总线或者缓存（根据实现和需要），如果在缓存锁定不能满足情况下，则升级为LOCK#信号进行总线锁定，防止其他处理器的访问</li>
+<li>如果发生的为缓存锁定，则lock后的写操作回写数据，则同时会让其他处理器的缓存失效，并强制其他处理器重新中主内存中读取。（通过缓存一致性实现这个效果）</li>
+</ul>
+<h2 id="CPU-层的保证"><a href="#CPU-层的保证" class="headerlink" title="CPU 层的保证"></a>CPU 层的保证</h2><p>在上面的代码中只是停留在JVM层的运行保证上，那么对于机器底层是如何保证其操作的原子性。</p>
+<p>如果无法满足，则直接会降级为其他锁操作，比如之前的总线、缓存锁定</p>
+<h3 id="总线锁定"><a href="#总线锁定" class="headerlink" title="总线锁定"></a>总线锁定</h3><p>总线锁定是作用于多个处理器对总内存访问之间的操作。</p>
+<p>当多个处理器对共享变量进行读取更新时，经常会造成前后更新和期望值不一致的情况。</p>
+<p>因此为了阻止这种情况，总线锁定后，当CPU  执行指令时，发起 LOCK 内存 信号，将其他处理器的请求阻塞，此时内存为该处理独享，当完成后，则通知UNLOCK 内存</p>
+<h3 id="缓存锁定"><a href="#缓存锁定" class="headerlink" title="缓存锁定"></a>缓存锁定</h3><p>缓存锁定是作用于处理器对具体内存地址访问时发生的操作。<br>相对于总线锁定，缓存锁定是对其的优化，由于总线锁定会导致其他正在执行的无关进程的影响，因此通过只锁定该变量的内存地址即可。</p>
+<p>具体操作：执行读取会对地址进行锁定LOCK，如果缓存在处理器LOCK操作期间回写操作，则通过缓存一致性机制通知修改的内存地址，从而保证不会被多个处理器修改，如果在锁定期间被其他处理器发起回写操作，则会被拒绝，并且在锁定期间是不能同时被其他处理器缓存缓存行。</p>
+<p>以上处理CPU原子性的自我保证，都是通过前缀lock 指令可以实现指令操作原子性（比如 ADD、OR、CMPXCHG、BTS 等有写入的操作指令）</p>
+<h4 id="处理器原子性"><a href="#处理器原子性" class="headerlink" title="处理器原子性"></a>处理器原子性</h4><p>CPU 对字节的读取写入（一个缓存行，大部分最小一个字节）都是原子性的，如果处理器进行这些操作，则其他的处理器是无法访问，该内存区域处于独享状态。在后期中对于读取的单位有了更多的提升，比如 64 bit ，但是这些更复杂的操作在其他运行机制上也需要得到保证才能保证其原子性比如：</p>
+<ul>
+<li>保证读取不跨越多个缓存行</li>
+<li>保证不超过总线宽度</li>
+<li>保证不跨页表访问</li>
+</ul>
+<h2 id="缓存一致性（嗅探技术）"><a href="#缓存一致性（嗅探技术）" class="headerlink" title="缓存一致性（嗅探技术）"></a>缓存一致性（嗅探技术）</h2><p>在共享的数据总线上，所有的内存传输都在这条总线上进行，处理器对于内存的访问都需要经过仲裁处理（arbitrate ： 在一个指令周期中，只有一个CPU缓存可以读写缓存），CPU缓存的工作不仅包括与内存总线的交互，还包括对总线上所有数据交互的感知（比如其他处理器与总线发生的读写操作），比如当一个处理器发生读写操作，其他处理器同时都将得到通知，这便是缓存一致性<code>（嗅探技术）</code>，缓存一致性对之前提到的缓存行锁定提供了强力支持。</p>
+<h3 id="缓存行"><a href="#缓存行" class="headerlink" title="缓存行"></a>缓存行</h3><p>缓存行锁定的单位即为缓存行，那么缓存行又是什么。</p>
+<p>缓存行指的是CPU缓存中最小的存储单，也是一段存储空间，根据CPU架构实现的不同有32、64位等，目前主流为64字节大小。</p>
+<p>当CPU执行读取内存的指令时，会将一段内存地址传递给一级数据缓存，一级数据缓存会检查内存地址所对应的缓存段，检查是否在缓存中，如果没有则从内存中加载整个缓存段，这里数据读取会根据<code>局部性原理</code>将相邻内存地址的的缓存段整块加载进处理器缓存中。</p>
+<h3 id="MESI-协议"><a href="#MESI-协议" class="headerlink" title="MESI 协议"></a>MESI 协议</h3><p>市面上对于缓存一致性有比较多的实现，比较主流的是MESI协议。</p>
+<p>在MESI协议中对缓存定义了四种状态：</p>
+<ul>
+<li>M(modify) ：表示该缓存已被修改（相对于S，同时也需要同步缓存），处于这一状态的数据，只在本CPU中有缓存数据，而其他CPU中没有。同时其状态相对于内存中的值来说，是已经被修改的，且没有更新到内存中</li>
+<li>E(exclusive) ：表示该缓存被改CPU独占（无需同步缓存），处于这一状态的数据，只有在本CPU中有缓存，且其数据没有修改，即与内存中一致</li>
+<li>S(share) ：表示该缓存被其他CPU共享（需要同步缓存，但是目前还没被修改），处于这一状态的数据，只有在本CPU中有缓存，且其数据没有修改，即与内存中一致</li>
+<li>I（invalid）：表示该缓存已失效（针对共享缓存），本CPU中的这份缓存已经无效。</li>
+</ul>
+<p>在以上的各个状态中，如果处于不同的状态锁执行的职责会相对不一样。</p>
+<ul>
+<li>M：一个处于M状态的缓存行，必须时刻监听所有试图读取该缓存行对应的主存地址的操作，如果监听到，则必须在此操作执行前把其缓存行中的数据写回CPU</li>
+<li>S：一个处于S状态的缓存行，必须时刻监听使该缓存行无效或者独享该缓存行的请求，如果监听到，则必须把其缓存行状态设置为I</li>
+<li>E：一个处于E状态的缓存行，必须时刻监听其他试图读取该缓存行对应的主存地址的操作，如果监听到，则必须把其缓存行状态设置为S</li>
+</ul>
+<p>一个内存行针对于CPU的请求只有两种动作需要考虑回应：</p>
+<ul>
+<li><p>读：当CPU需要读取数据时，如果其缓存行的状态是I的，则需要从内存中读取，并把自己状态变成S，如果不是I，则可以直接读取缓存中的值，但在此之前，必须要等待其他CPU的监听结果，如其他CPU也有该数据的缓存且状态是M，则需要等待其把缓存更新到内存之后，再读取</p>
+</li>
+<li><p>写：当CPU需要写数据时，只有在其缓存行是M或者E的时候才能执行，否则需要发出特殊的RFO指令(Read Or Ownership，这是一种总线事务)，通知其他CPU置缓存无效(I)，这种情况下会性能开销是相对较大的。在写入完成后，修改其缓存状态为M</p>
+</li>
+</ul>
+<blockquote>
+<p>并非所有情况都会使用缓存一致性的，如被操作的数据不能被缓存在CPU内部或操作数据跨越多个缓存行(状态无法标识)，则处理器会调用总线锁定;另外当CPU不支持缓存锁定时，自然也只能用总线锁定了，比如说奔腾486以及更老的CPU。</p>
+</blockquote>
+<h1 id="关于锁"><a href="#关于锁" class="headerlink" title="关于锁"></a>关于锁</h1><p>Java 中提供了大量的锁实现和工具为我们在多线程中提供方便。<br>当然在了解锁工具前，我们需要对锁的知识有一些了解。</p>
+<h2 id="对象头"><a href="#对象头" class="headerlink" title="对象头"></a>对象头</h2><p>在运行时的对象结构中，存在在对锁的记录区域，这部分区域位于对象头区域。</p>
+<p><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/30954/WEBRESOURCE8bfaa4b2482158ebc99cf9f8d21cbd9a"  alt="image"></p>
+<ul>
+<li>markword <code>存储当前对象的锁状态、hashcode、GC age、偏向锁位等信息，在使用到锁机制时 Synconized、CAS 等都需要访问到</code></li>
+<li>Class Pointer (对象类型指针) <code>类元数据指针，该指针用于确定实例所属的Class，如果为数组则会额外部分存储数组长度</code></li>
+<li>instance data (实例数据区域) <code>存储对象的所有字段信息（父子类），分配规则与JVM配置有关。</code></li>
+<li>padding（对齐数据）<code>用于对齐 8 byte 部分，任何对象大小都需要为8的整数倍，不足部分则补齐，不一定存在</code></li>
+</ul>
+<p>以上是JVM对象的主要结构。在markword 中存有该对象锁的状态信息，具体锁的状态和对于的字节意义如下（以32byte为例）：</p>
+<p><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/30960/WEBRESOURCE36d1456473b72a65b2a75deb40e95767"  alt="image"></p>
+<h2 id="锁升级"><a href="#锁升级" class="headerlink" title="锁升级"></a>锁升级</h2><p>锁的升级是为了减少线程挂起恢复（内核访问造成访问性能差），在不必要的时候不必浪费过多CPU资源。</p>
+<p>转化方向和条件如下： </p>
+<p><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/30991/WEBRESOURCE8f7f4c587f6e554b3140e9d841e4942d"  alt="image"></p>
+<p>根据所状态的不同对于 markword 的存储的状态也会发生相应的变化</p>
+<h3 id="无锁"><a href="#无锁" class="headerlink" title="无锁"></a>无锁</h3><p>对象一开始处于无锁状态，如果未申请锁，则允许多线程进行访问。在无锁状态下对值的修改会一直处于尝试的状态，如果没有成功则重试，直到成功为止。</p>
+<p>无锁的同步技术：CAS</p>
+<h3 id="偏向锁"><a href="#偏向锁" class="headerlink" title="偏向锁"></a>偏向锁</h3><p>解决问题：如果对象一直处于只有一个线程持有，那么即使使用锁也不必要进行同步操作</p>
+<p>升级条件：当有其他线程访问的时候触发锁升级。</p>
+<p>升级操作：</p>
+<ul>
+<li>标记为设置 01</li>
+<li>偏向值设置 1</li>
+<li>CAS获取线程ID并设置进去</li>
+</ul>
+<p>具体实现： ReentrantLock、synchronized 等</p>
+<h3 id="轻量锁"><a href="#轻量锁" class="headerlink" title="轻量锁"></a>轻量锁</h3><p>解决问题：如果锁资源竞争不激烈，或者可以很快对锁进行释放获取（通过自旋锁就能解决的话），则不需要通过系统内核态让线程进行挂起、恢复状态，提升效率。</p>
+<p>升级条件：锁竞争严重，超出限制（自旋时间或次数超时）</p>
+<p>升级操作：</p>
+<ul>
+<li>撤销偏向锁，标记锁 00</li>
+<li>线程生成 LockRecord 记录信息</li>
+<li>线程通过CAS 将 LockRecord 记录信息更新到 markword 指针指向</li>
+</ul>
+<h3 id="重量锁"><a href="#重量锁" class="headerlink" title="重量锁"></a>重量锁</h3><p>如果以上锁都无法解决，则升级为重量锁，向系统申请资源对线程进行管理。</p>
+<p>重量锁的每次资源获取都需要向系统申请资源，当线程挂起后，将进入等待系统资源申请成功信号，这时由用户态向内核态调度，当系统回复后，则切回用户态，这过程比较耗时。</p>
+<h2 id="Synchronized（monitor-监控器）"><a href="#Synchronized（monitor-监控器）" class="headerlink" title="Synchronized（monitor 监控器）"></a>Synchronized（monitor 监控器）</h2><p>当方法中被标记该同步关键字，则在JVM常量池方法结构中对该方法的访问标记会增加 <code>ACC_SYNCHRONIZED</code> 标记，以区分该方法是否为同步方法。当开始执行时，会尝试让线程持有指定的monitor才能开始执行方法，当方法结束时则释放 monitor。</p>
+<p>在字节码指令中，synchronized 会通过<code>monitorenter</code>、<code>monitorexit</code> 进行进入和释放行为。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">class Main &#123;</span><br><span class="line">    private static volatile int variable &#x3D; 0;</span><br><span class="line">    public static void main(String[] arg) throws InterruptedException &#123;</span><br><span class="line">        Main main &#x3D; new Main();</span><br><span class="line">        synchronized (main) &#123;</span><br><span class="line">            variable++;</span><br><span class="line">        &#125;</span><br><span class="line">        new Thread() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                super.run();</span><br><span class="line">                synchronized (main) &#123;</span><br><span class="line">                    variable++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;.start();</span><br><span class="line">        Thread.sleep(3000);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>解释后main方法中字节码为：</p>
+<p><img src="/" class="lazyload" data-src="http://note.youdao.com/yws/res/31495/2CA0DEEB65AD4273804274CDEDF1AABE"  alt="image"></p>
+<p>该指令即为对监视器锁的控制，在java中每个对象都关联着监视器锁，当线程尝试获取监视器时（monitor）将触发以下流程：</p>
+<ul>
+<li>检测monitor的计数器，如果为0则允许该线程获得monitor锁，并增加计数为1，该线程即为monitor的所有者。</li>
+<li>如果不为0则检测monitor拥有者是否为该线程，如果是则进入重进入，monitor计数器继续累加。</li>
+<li>如果检查到monitor的拥有者不是当前线程，则当前线程进入阻塞（用户态切换内核态），等待monitor计数器为0，则尝试重新获取锁。</li>
+</ul>
+<h2 id="其他锁"><a href="#其他锁" class="headerlink" title="其他锁"></a>其他锁</h2><h3 id="自旋锁、适应性自旋锁"><a href="#自旋锁、适应性自旋锁" class="headerlink" title="自旋锁、适应性自旋锁"></a>自旋锁、适应性自旋锁</h3><p>JVM的线程和系统线程通常是需要绑定的，对线程的挂起恢复都需要经过内核态，进行状态变化，这阶段比较消耗性能和时间。因此为了处理一些较为轻量的锁场景（比如锁等待只需要 10ns而挂起恢复线程需要 100ms 则不划算），产生的自旋锁。</p>
+<p>自旋锁（JDK 1.4.2 开始支持）：也就是为了防止线程挂起进入内核态，将线程的执行停留在类似 <code>while(true)</code> 不断轮询的条件下，直到达到条件恢复或者挂起（称为自旋空转）。</p>
+<p>自适应自旋（JDK 6 开始支持）：为了提升有效的自旋，在后期中对自旋锁固定尝试（默认为10次，可以通过JVM参数改变）改变为动态适应。在同一锁对象中，如果之前自旋成功获得锁，则默认系统在下次会认为容易获得成功，因此允许相对拉长自旋时间。如果自旋最近经常失败，则为了避免浪费资源，则可能会直接转为其他锁行为。</p>
+<h3 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h3><p>线程获取锁后，是允许同一个线程再次对同一对象进行重复获取，如果没有改特性在很多情况下如果同一个线程获取同一个锁将导致死锁。</p>
+<p>当获取一次锁后，锁对象头markwrok 中会记录锁持有者和获取成功的次数的计数器，每次累计为1，只有当释放相同次数的锁后才能对该对象的锁资源进行释放。</p>
+<p>ReetrantLock 和 synchronized 都是可重入的</p>
+<h3 id="乐观、悲观锁"><a href="#乐观、悲观锁" class="headerlink" title="乐观、悲观锁"></a>乐观、悲观锁</h3><p>这两种锁指的是对线程同步处理的不同方式。</p>
+<ul>
+<li>乐观锁：认为使用数据时数据不会发生修改，不进行锁的控制，当更新数据或者修改之前的数据时才会通过标记位或者CAS检查数据状态来决定是否需要更新。面向读场景多的情况，提升读取性能。</li>
+<li>悲观锁：认为在使用数据期间数据可能会被其他线程修改，因此在对数据进行操作时，常用synchronized、Retee</li>
+</ul>
+<h3 id="独享、共享锁"><a href="#独享、共享锁" class="headerlink" title="独享、共享锁"></a>独享、共享锁</h3><ul>
+<li><p>独享锁：锁一次只能被一个线程锁持有，其他线程无法对已锁对象进行加锁，可以进行数据读写。之前的 synchronized 即为独享锁</p>
+</li>
+<li><p>共享锁：如果线程对数据进行共享锁后，则其他线程只能对该对象添加共享锁，不能添加独享锁，获得共享锁的线程只能读取不能写入数据。相关技术为 AQS</p>
+</li>
+<li><h3 id="公平、非公平锁"><a href="#公平、非公平锁" class="headerlink" title="公平、非公平锁"></a>公平、非公平锁</h3></li>
+<li><p>公平锁：即按照线程申请锁的顺序来获取锁</p>
+<ul>
+<li>优点：不会造成饥饿</li>
+<li>缺定：吞吐率低处理效率低，除第一个线程外其他线程都需要被阻塞，CPU唤醒开销相对于非公平大，每次锁资源释放都需要唤醒所有线程，重新进入锁获取。</li>
+</ul>
+</li>
+<li><p>非公平锁：多个线程会同时尝试获取锁，失败才进入等待，如果尝试获取时刚好锁处于可获取状态，则该线程直接越过之前的线程获得锁。</p>
+<ul>
+<li>优点：吞吐量高，不需要反复唤醒（减少挂起次数，如果刚好有锁资源，则刚好会给刚需要的还没进入挂起的线程资源），不必唤醒所有线程重新获取锁。</li>
+<li>缺点：容易让等待久的线程更久，导致线程饿死，一直得不到运行的机会。</li>
+</ul>
+</li>
+</ul>
+<h2 id="锁工具-慢慢补充"><a href="#锁工具-慢慢补充" class="headerlink" title="锁工具(慢慢补充)"></a>锁工具(慢慢补充)</h2><h3 id="AbscractQueuedSynchronizer-AQS"><a href="#AbscractQueuedSynchronizer-AQS" class="headerlink" title="AbscractQueuedSynchronizer (AQS)"></a>AbscractQueuedSynchronizer (AQS)</h3><p>AQS是原理是将请求所有线程构建成一个CLH（ContentionList 基于自旋锁的双向链表，会对不断轮询前驱状态，如果发现前驱锁被释放，则结束当前线程自旋尝试去获得锁）队列，当一个线程节点执行完释放自身的锁时（lock.unlock()) 会激活后面的节点获取锁，如果正在执行的线程不再队列中，则等待执行的线程处于阻塞状态。</p>
+<p>内部中通过一个int类型的成员变量state控制同步状态：</p>
+<ul>
+<li>当state=0时，则当前共享资源未被任何线程占用</li>
+<li>当state=1时，则存在线程使用该共享资源</li>
+</ul>
+<p>如果没有被共享则直接获取到资源，如果有则其他线程机械能构建的队列中。</p>
+<p>内部通过Condition进行相关控制调用：</p>
+<ul>
+<li>当执行 wait 则会将线程加入等待队列中</li>
+<li>当执行 signal 则线程从等待队列中战役到同步队列中进行锁竞争</li>
+<li>当执行 await 则进入等待队列</li>
+</ul>
+<p>这里面涉及两种队列同步队列和等待队列，</p>
+<blockquote>
+<p>当执行 await 会对锁资源进行释放，直到下次恢复（notify），将重新获得锁资源</p>
+</blockquote>
+<p>AQS实现了对多线程竞争的处理，但是对于锁需要继承它进行实现（比如 Sync），具体需要实现：</p>
+<ul>
+<li>独享锁：tryAcquire（被 acquire 调用）、tryRelease（被 release 调用）</li>
+<li>共享锁：tryAcquireShared（被 tryAcquireShare 调用）、tryReleaseShared（被 releaseShared 调用）</li>
+</ul>
+<h4 id="获取锁"><a href="#获取锁" class="headerlink" title="获取锁"></a>获取锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"> &#x2F;&#x2F; 获取锁</span><br><span class="line"> public final void acquire(int arg) &#123;</span><br><span class="line">     &#x2F;&#x2F; 检查是否能获取锁，如果获取不到则添加到CLH队列中，并进入</span><br><span class="line">     &#x2F;&#x2F; 轮询自旋状态，在这过程中检查是否被 interrupt 中断</span><br><span class="line">     if (!tryAcquire(arg) &amp;&amp;</span><br><span class="line">         acquireQueued(addWaiter(Node.EXCLUSIVE), arg))</span><br><span class="line">         selfInterrupt();</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> private Node addWaiter(Node mode) &#123;</span><br><span class="line">     Node node &#x3D; new Node(mode);</span><br><span class="line">     &#x2F;&#x2F; 添加到 CLH 链表尾部，如果当前链表没产生则直接产生首尾节点</span><br><span class="line">     &#x2F;&#x2F; 直到添加成功</span><br><span class="line">     for (;;) &#123;</span><br><span class="line">         Node oldTail &#x3D; tail;</span><br><span class="line">         if (oldTail !&#x3D; null) &#123;</span><br><span class="line">             U.putObject(node, Node.PREV, oldTail);</span><br><span class="line">             if (compareAndSetTail(oldTail, node)) &#123;</span><br><span class="line">                 oldTail.next &#x3D; node;</span><br><span class="line">                 return node;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125; else &#123;</span><br><span class="line">             initializeSyncQueue();</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;    </span><br><span class="line"> </span><br><span class="line"> &#x2F;&#x2F; 对所添加的节点node进行阻塞，如果在阻塞前能通过</span><br><span class="line"> &#x2F;&#x2F; tryAccquire获得锁则无需阻塞（非公平锁）</span><br><span class="line">final boolean acquireQueued(final Node node, int arg) &#123;</span><br><span class="line">     try &#123;</span><br><span class="line">         boolean interrupted &#x3D; false;</span><br><span class="line">         &#x2F;&#x2F; 每次循环都是对锁检测和阻塞处理</span><br><span class="line">         </span><br><span class="line">         &#x2F;&#x2F; 等待过程检查是否需要进入显式阻塞（parkAndCheckInterrupt() &#x3D;&gt; sun.misc.Unsafe.park())</span><br><span class="line">         for (;;) &#123;</span><br><span class="line">             final Node p &#x3D; node.predecessor();</span><br><span class="line">             if (p &#x3D;&#x3D; head &amp;&amp; tryAcquire(arg)) &#123;</span><br><span class="line">                 setHead(node);</span><br><span class="line">                 p.next &#x3D; null; &#x2F;&#x2F; help GC</span><br><span class="line">                 return interrupted;</span><br><span class="line">             &#125;</span><br><span class="line">             &#x2F;&#x2F; 先检查线程状态如果线程处于 </span><br><span class="line">             &#x2F;&#x2F; CANCEL状态则不需要阻塞，具体规则见 </span><br><span class="line">             &#x2F;&#x2F; shouldParkAfterFailedAcquire：</span><br><span class="line">             </span><br><span class="line">             if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;</span><br><span class="line">                 parkAndCheckInterrupt())</span><br><span class="line">                 interrupted &#x3D; true;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125; catch (Throwable t) &#123;</span><br><span class="line">         cancelAcquire(node);</span><br><span class="line">         throw t;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="解锁"><a href="#解锁" class="headerlink" title="解锁"></a>解锁</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"> public final boolean release(int arg) &#123;</span><br><span class="line">     if (tryRelease(arg)) &#123;</span><br><span class="line">         Node h &#x3D; head;</span><br><span class="line">         if (h !&#x3D; null &amp;&amp; h.waitStatus !&#x3D; 0)</span><br><span class="line">             unparkSuccessor(h);</span><br><span class="line">         return true;</span><br><span class="line">     &#125;</span><br><span class="line">     return false;</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> &#x2F;&#x2F; 锁释放后，从队列尾部向上找到一个状态可用的线程，找到后</span><br><span class="line"> &#x2F;&#x2F; 通知内核处理该线程 LockSupport.unpark</span><br><span class="line">private void unparkSuccessor(Node node) &#123;</span><br><span class="line"></span><br><span class="line">     int ws &#x3D; node.waitStatus;</span><br><span class="line">     if (ws &lt; 0)</span><br><span class="line">         node.compareAndSetWaitStatus(ws, 0);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">     Node s &#x3D; node.next;</span><br><span class="line">     if (s &#x3D;&#x3D; null || s.waitStatus &gt; 0) &#123;</span><br><span class="line">         s &#x3D; null;</span><br><span class="line">         for (Node p &#x3D; tail; p !&#x3D; node &amp;&amp; p !&#x3D; null; p &#x3D; p.prev)</span><br><span class="line">             if (p.waitStatus &lt;&#x3D; 0)</span><br><span class="line">                 s &#x3D; p;</span><br><span class="line">     &#125;</span><br><span class="line">     if (s !&#x3D; null)</span><br><span class="line">         LockSupport.unpark(s.thread);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>上面对于锁的获取是非公平的处理，当有线程进行竞争时，会优先让该线程进行锁获取尝试，如果不行才将线程追加到等待队列队尾（CLH链表队列）</p>
+<h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS 是一种乐观锁，主要围绕 内存值（V）、将要更新值（B）、预期值（A）进行 比较、交换、更新等操作，这些操作都会在底层保证的原子性下执行。在并发过程中的CAS，如果不满足条件会导致另一个线程写入或更新是失败的。</p>
+<p>具体提供的方法有：</p>
+<ul>
+<li>compareAndSwapIn(Object o, long offset, int execpted, int x)<br>映射的JNI 方法是 ：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">inline jint Atomic::cmpxchg (jint exchange_value, volatile jint* dest, jint compare_value) &#123;</span><br><span class="line">  int mp &#x3D; os::is_MP();</span><br><span class="line">  __asm &#123;</span><br><span class="line">    mov edx, dest</span><br><span class="line">    mov ecx, exchange_value</span><br><span class="line">    mov eax, compare_value</span><br><span class="line">    LOCK_IF_MP(mp)</span><br><span class="line">    cmpxchg dword ptr [edx], ecx</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过底层指令 <code>cmpxchg</code> 和 <code>lock</code> 进行保证。<br>lock 前缀会将该指令之前和之后的读写指令进行重拍，并且对于写缓冲区的所有数据都会直接刷新到总内存中（原子性）。</p>
+<blockquote>
+<p>如果为多核CPU <code>LOCK_IF_MP</code> 则提供 lock 前缀的内存屏障，如果单核则不需要。lock 前缀会在执行期间将总线锁住，从而保证其他处理器无法访问总线内存，这称为总线锁，后期有的cpu做了优化，避免总线资源过度消耗，比如 奔腾系列的 缓存锁定，并不对总线进行锁定，在满足条件后仅对缓存行的内存区域进度独占，但是如果竞争剧烈或者内存地址未对其，则还是会降级为总线锁定</p>
+</blockquote>
+<h4 id="ABA-问题"><a href="#ABA-问题" class="headerlink" title="ABA 问题"></a>ABA 问题</h4><p>CAS 典型引发的问题，CAS目的是根据值的不同判断是否为旧值进行更新，但是如果 线程1 和线程2同时进行时，如果1、2 都从 内存值V中获得到 V，当 线程1经过一段时间计算，将计算值 B 更新到内存中，在之后线程1又经过计算 得到新值V更新到 内存中。造成一系列的更新又将内存恢复到之前的状态值，如果这时候线程2 进行对比更新操作，会发现 V 值和预期值一致，于是将更新内存值为另外一个 C 值。 那么这个将产生问题。</p>
+<p>这例子中主要是希望如果线程1当内存值发生更新后，不希望线程2进行更新，但是由于 线程1更新的前后内存值未发生变化，导致线程2认为线程1没有发生变化。</p>
+<h3 id="Lock接口"><a href="#Lock接口" class="headerlink" title="Lock接口"></a>Lock接口</h3><p>JSE 5.0 后增加的锁接口，实现了比 synchronzed 关键字更加粒度小的锁控制，可显示进行锁获取和释放（synchronzed 为隐式，自动对锁进行获取和释放）。</p>
+<p>几个关键方法：</p>
+<ul>
+<li>lock() : 获得锁，如果当锁不可用，会导致线程休眠，直到获得锁</li>
+<li>lockInterruptibly() : 线程如果未发生中断，则获取锁。当线程发生中断或者锁被其他线程占用则进入休眠，在该线程在获取锁过程中可响应中断操作</li>
+<li>newCondition(): Condition ：获取Condition，用于该线程的操作</li>
+<li>unlock() : 释放该线程持有的锁</li>
+<li>tryLock() : boolean :  尝试获取锁成功则返回true，不会进入休眠等待</li>
+<li>tryLock(long time, TimeUnit unit): boolean : 在指定时间内获取锁，成功返回true</li>
+</ul>
+<h3 id="ReentrantLock"><a href="#ReentrantLock" class="headerlink" title="ReentrantLock"></a>ReentrantLock</h3><p>重入锁 ReentrantLock 是 Lock 锁的实现，支持对锁更精确化的控制。它是基于AQS开发而成，包含 Sync（实现AQS）、NoFairSync（非公平锁,实现自 Sync）、FairSync（公平锁，实现自Sync）的实现（继承于AQS的锁），重新实现了AQS的<br>tryRelease、tryAcquire、tryReleaseShared 等方法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Lock lock &#x3D; new ReentrantLock()</span><br><span class="line">lock.lock() &#x2F;&#x2F; 锁获取</span><br><span class="line"></span><br><span class="line">try &#123;</span><br><span class="line">    ...</span><br><span class="line">&#125; finally &#123;</span><br><span class="line">    lock.unlock() &#x2F;&#x2F; 一定要放到 finally 保证锁与解锁的一致性，否则线程得不到释放，造成死锁</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ReadWriteLock"><a href="#ReadWriteLock" class="headerlink" title="ReadWriteLock"></a>ReadWriteLock</h3><h3 id="ReentrantReadWriteLock"><a href="#ReentrantReadWriteLock" class="headerlink" title="ReentrantReadWriteLock"></a>ReentrantReadWriteLock</h3><p>用于对共享资源的读和写操作，通常用于读取操作频繁，写操作较为低频的情况，能极大提供读取效率。内部通过维护两种锁机制来保证读写不受干扰：</p>
+<ul>
+<li>读取：共享锁，允许多个线程对共享资源同时进行读取</li>
+<li>写入：独占锁（排他锁），只允许一个线程在同时进行写入操作</li>
+</ul>
+<p>读写锁支持特性有：</p>
+<ul>
+<li>公平性选择（公平与非公平）</li>
+<li>重入锁</li>
+<li>锁降级 写锁可以降级为读锁、并且由于多个锁锁定，会保证锁的获取、释放顺序（防止死锁）</li>
+</ul>
+</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JVM/">JVM</a><a class="post-meta__tags" href="/tags/Java/">Java</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></div><div class="post_share"></div></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2018/06/01/Gradle%E4%B8%ADTask%E5%BA%94%E7%94%A8/"><img class="prev_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Gradle中Task应用</div></div></a></div><div class="next-post pull_right"><a href="/2018/05/24/Gradle%E9%85%8D%E7%BD%AEKotlin%E7%8E%AF%E5%A2%83/"><img class="next_cover lazyload" data-src="/img/post.jpg" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Gradle配置Kotlin环境</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2018/05/15/JVM了解/" title="JVM了解"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-05-15</div><div class="relatedPosts_title">JVM了解</div></div></a></div><div class="relatedPosts_item"><a href="/2018/05/16/Java-汇编调试/" title="Java-汇编调试"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-05-16</div><div class="relatedPosts_title">Java-汇编调试</div></div></a></div><div class="relatedPosts_item"><a href="/2018/04/11/数据结构-ArrayList/" title="数据结构-ArrayList"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-04-11</div><div class="relatedPosts_title">数据结构-ArrayList</div></div></a></div><div class="relatedPosts_item"><a href="/2018/04/23/数据结构-HashMap/" title="数据结构-HashMap"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-04-23</div><div class="relatedPosts_title">数据结构-HashMap</div></div></a></div><div class="relatedPosts_item"><a href="/2018/04/12/数据结构-LinkedList/" title="数据结构-LinkedList"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-04-12</div><div class="relatedPosts_title">数据结构-LinkedList</div></div></a></div><div class="relatedPosts_item"><a href="/2018/04/28/数据结构-LinkedHashMap/" title="数据结构-LinkedHashMap"><img class="relatedPosts_cover lazyload"data-src="/img/post.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2018-04-28</div><div class="relatedPosts_title">数据结构-LinkedHashMap</div></div></a></div></div><div class="clear_both"></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2014 - 2020 By Bevis</div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async=""></script></body></html>
