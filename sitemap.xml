@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2016/07/22/Android%E4%B8%AD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95API/</loc>
+    
+    <lastmod>2020-05-28T15:04:48.775Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2016/05/15/Android%E6%9C%AA%E6%8D%95%E8%8E%B7%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
+    
+    <lastmod>2020-05-28T15:04:02.158Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2019/01/13/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%92%8C%E9%98%85%E8%AF%BB/</loc>
+    
+    <lastmod>2020-05-28T15:03:32.926Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2016/05/28/Android%E5%9F%BA%E7%A1%80-Service/</loc>
     
     <lastmod>2020-05-28T15:02:15.230Z</lastmod>
@@ -114,13 +135,6 @@
   </url>
   
   <url>
-    <loc>http://yoursite.com/2016/07/22/Android%E4%B8%AD%E5%AD%98%E5%82%A8%E7%9B%AE%E5%BD%95API/</loc>
-    
-    <lastmod>2020-04-22T06:10:38.762Z</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>http://yoursite.com/2019/02/21/Jetpack-ViewModel/</loc>
     
     <lastmod>2020-04-20T17:37:10.759Z</lastmod>
@@ -166,13 +180,6 @@
     <loc>http://yoursite.com/2016/05/01/Hexo%E6%90%AD%E5%BB%BA/</loc>
     
     <lastmod>2020-04-14T15:46:04.671Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2019/01/13/Android%E6%BA%90%E7%A0%81%E7%BC%96%E8%AF%91%E5%92%8C%E9%98%85%E8%AF%BB/</loc>
-    
-    <lastmod>2020-04-13T14:07:30.131Z</lastmod>
     
   </url>
   
@@ -236,13 +243,6 @@
     <loc>http://yoursite.com/2019/05/01/OkHttp/</loc>
     
     <lastmod>2020-04-10T12:44:24.843Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2016/05/15/Android%E6%9C%AA%E6%8D%95%E8%8E%B7%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/</loc>
-    
-    <lastmod>2020-04-10T12:43:47.076Z</lastmod>
     
   </url>
   
